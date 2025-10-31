@@ -1,0 +1,36 @@
+# Docker Compose 版本
+version: '3.8'
+
+# 服务（容器）列表
+services:
+  postgres:
+    # 指定从./Dockerfile文件构建镜像
+    build:
+      context: .
+      dockerfile: Dockerfile
+    # 容器名称
+    container_name: my_postgres
+    environment:
+      POSTGRES_DB: postgresql
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: wxhd
+      POSTGRES_INITDB_ARGS: "--encoding=UTF8 --lc-collate=C --lc-ctype=C"
+    # 主机端口:容器端口
+    ports:
+      - "5432:5432"
+    # 挂载目录
+    volumes:
+      # 数据目录 由docker自动管理
+      - my_postgres_data:/var/lib/postgresql/data
+      # 备份目录 当前目录下的backups目录映射到容器的/backups目录
+      - ./backups:/backups
+    # 健康检查
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+# 声明持久化数据卷
+volumes:
+  my_postgres_data:
