@@ -1,3 +1,4 @@
+```
 # 创建环境
 conda env create -f environment.yml
 # or
@@ -10,3 +11,4 @@ pip install psycopg2-binary python-dotenv sqlalchemy flask pandas numpy jupyter
 
 # 测试访问
 python main.py
+```
