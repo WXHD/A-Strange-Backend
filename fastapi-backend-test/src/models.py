@@ -11,6 +11,10 @@ class UserUpdate(BaseModel):
     username: Optional[str] = None
     pwd: Optional[str] = None
 
+class UserAuth(BaseModel):
+    username: str
+    pwd: str
+
 # 响应模型
 class UserResponse(BaseModel):
     id: int

@@ -2,10 +2,21 @@ from .database import db
 
 class UserService:
     @staticmethod
-    def get_all_users():
+    def get_all_users(limit=None, offset=None):
         """获取所有用户"""
-        query = "SELECT * FROM users ORDER BY id;"
-        return db.execute_query(query)
+        if limit is not None and offset is not None:
+            query = "SELECT * FROM users ORDER BY id LIMIT %s OFFSET %s;"
+            return db.execute_query(query, (limit, offset))
+        else:
+            query = "SELECT * FROM users ORDER BY id;"
+            return db.execute_query(query)
+    
+    @staticmethod
+    def get_total_users():
+        """获取用户总数"""
+        query = "SELECT COUNT(*) as total FROM users;"
+        result = db.execute_query(query)
+        return result[0]['total'] if result else 0
     
     @staticmethod
     def get_user_by_id(user_id):

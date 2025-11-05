@@ -1,0 +1,132 @@
+.users-container {
+  background: linear-gradient(to bottom right, #111827, #1f2937);
+  padding: 1rem;
+  min-height: 100vh;
+  overflow: hidden;
+}
+
+.users-card {
+  max-width: 1200px;
+  margin: 0 auto;
+  border-radius: 1rem;
+  background: rgba(31, 41, 55, 0.4);
+  backdrop-filter: blur(1rem);
+  border: 1px solid rgba(55, 65, 81, 0.5);
+  padding: 2rem;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  width: 100%;
+  height: calc(100vh - 2rem);
+  display: flex;
+  flex-direction: column;
+}
+
+.users-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.users-title {
+  font-size: 2.25rem;
+  line-height: 1.2;
+  font-weight: 700;
+  color: #ffffff !important;
+  margin: 0;
+  padding: 0.25rem 0;
+}
+
+.users-table-container {
+  flex: 1;
+  overflow: hidden;
+}
+
+.users-table {
+  background: transparent;
+  
+  .ant-table {
+    background: transparent;
+    
+    .ant-table-container {
+      border-radius: 0.5rem;
+      overflow: hidden;
+      
+      .ant-table-content {
+        overflow-x: auto;
+      }
+    }
+    
+    .ant-table-thead {
+      > tr {
+        > th {
+          background: rgba(30, 41, 59, 0.7);
+          color: #cbd5e1;
+          border-bottom: 1px solid rgba(55, 65, 81, 0.8);
+          font-weight: 600;
+        }
+      }
+    }
+    
+    .ant-table-tbody {
+      > tr {
+        > td {
+          background: rgba(15, 23, 42, 0.5);
+          color: #e2e8f0;
+          border-bottom: 1px solid rgba(55, 65, 81, 0.5);
+        }
+        
+        &:hover {
+          > td {
+            background: rgba(30, 41, 59, 0.7);
+          }
+        }
+      }
+    }
+  }
+}
+
+.action-buttons {
+  display: flex;
+  gap: 0.5rem;
+  
+  .ant-btn-link {
+    color: #60a5fa;
+    padding: 0;
+    
+    &:hover {
+      color: #3b82f6;
+    }
+  }
+  
+  .ant-btn-link-dangerous {
+    color: #f87171;
+    
+    &:hover {
+      color: #ef4444;
+    }
+  }
+}
+
+// 响应式调整
+@media (max-width: 768px) {
+  .users-container {
+    padding: 0.5rem;
+  }
+  
+  .users-card {
+    padding: 1rem;
+    height: calc(100vh - 1rem);
+  }
+  
+  .users-header {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .users-title {
+    font-size: 1.5rem;
+    text-align: center;
+  }
+}

@@ -1,11 +1,20 @@
-from fastapi import FastAPI, HTTPException
-from typing import List
+from fastapi import FastAPI, Query
 from src.database import db
 from src.user_service import UserService
-from src.models import UserCreate, UserUpdate, UserResponse, ApiResponse
+from src.models import UserCreate, UserUpdate, ApiResponse, UserAuth
+from fastapi.middleware.cors import CORSMiddleware
 
 
 app = FastAPI(title="用户管理API", version="1.0.0")
+
+# 配置 CORS 支持跨域
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:3000", "http://localhost:10012"],  # 允许的前端地址
+    allow_credentials=True,
+    allow_methods=["*"],  # 允许所有方法
+    allow_headers=["*"],  # 允许所有头
+)
 
 # API 路由
 @app.post("/add_user/", response_model=ApiResponse, summary="创建用户")
@@ -17,7 +26,7 @@ async def create_user(user: UserCreate):
             return ApiResponse(
                 status="success",
                 message="用户创建成功",
-                data={"count": result}
+                data=None
             )
         else:
             return ApiResponse(
@@ -32,17 +41,21 @@ async def create_user(user: UserCreate):
             data=None
         )
 
-@app.get("/user/", response_model=ApiResponse, summary="获取所有用户")
-async def get_all_users():
+@app.post("/user/", response_model=ApiResponse, summary="获取所有用户")
+async def get_all_users(limit: int = Query(10, ge=1, le=100), offset: int = Query(0, ge=0)):
     """获取所有用户列表"""
     try:
-        users = UserService.get_all_users()
+        users = UserService.get_all_users(limit, offset)
+        total = UserService.get_total_users()
         return ApiResponse(
             status="success",
             message=f"成功获取 {len(users)} 个用户",
             data={
                 "users": users,
-                "count": len(users)
+                "count": len(users),
+                "total": total,
+                "limit": limit,
+                "offset": offset
             }
         )
     except Exception as e:
@@ -126,6 +139,29 @@ async def delete_user(user_id: int):
             message="用户删除成功",
             data=None
         )
+    except Exception as e:
+        return ApiResponse(
+            status="failed",
+            message=str(e),
+            data=None
+        )
+
+@app.post("/authenticate/", response_model=ApiResponse, summary="用户登录")
+async def authenticate_user(user: UserAuth):
+    """用户登录"""
+    try:
+        user = UserService.authenticate_user(user.username, user.pwd)
+        if user:
+            return ApiResponse(
+                status="success",
+                message="用户登录成功",
+                data=user
+            )
+        else:
+            return ApiResponse(
+                status="failed",
+                message="用户名或密码错误",
+            )
     except Exception as e:
         return ApiResponse(
             status="failed",
