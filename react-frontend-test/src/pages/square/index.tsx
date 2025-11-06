@@ -71,7 +71,7 @@ const SquarePage = () => {
     return (
         <div className="square-page">
             <div className="square-header">
-                <Title level={2}>应用查看</Title>
+                <Title level={2}>应用广场</Title>
                 <Paragraph type="secondary">探索和管理您的应用程序</Paragraph>
             </div>
 

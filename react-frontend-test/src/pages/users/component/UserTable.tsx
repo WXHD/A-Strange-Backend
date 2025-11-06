@@ -3,6 +3,8 @@ import { Button, Table, type TableProps } from "antd";
 
 import type { UserItem } from "@type/user";
 import { userService } from "@service/user-service";
+import DeleteModal from "./DeleteModal";
+import EditModal from "./EditModal";
 
 interface TableParams {
     pagination: {
@@ -26,6 +28,9 @@ interface QueryParams {
 
 const UserTableComponent: ForwardRefRenderFunction<refType> = (_, ref) => {
     const [loading, setLoading] = useState(false);
+    const [deleteModalShow, setDeleteModalShow] = useState(false);
+    const [editModalShow, setEditModalShow] = useState(false);
+    const [editItem, setEditItem] = useState<UserItem[]>([]);
     // 表单参数
     const [tableParams, setTableParams] = useState<TableParams>({
         pagination: {
@@ -46,6 +51,17 @@ const UserTableComponent: ForwardRefRenderFunction<refType> = (_, ref) => {
             limit: params.limit || 10,
             offset: params.offset || 0,
         }).then(res => {
+            if (res.users.length === 0 && params.offset !== 0){
+                setTableParams({
+                    ...tableParams,
+                    pagination: {
+                        ...tableParams.pagination,
+                        current: 1,
+                        total: res.total,
+                    },
+                });
+                return;
+            }
             setUsers(res.users);
             setTableParams({
                 ...tableParams,
@@ -76,13 +92,7 @@ const UserTableComponent: ForwardRefRenderFunction<refType> = (_, ref) => {
     ]);
 
     useEffect(() => {
-        const params: QueryParams = {
-            limit: tableParams.pagination.pageSize,
-            offset: (tableParams.pagination.current - 1) * tableParams.pagination.pageSize,
-        };
-        setLoading(true);
-        fetchUsers(params);
-        setLoading(false);
+        upData();
     }, [
         tableParams.pagination.current,
         tableParams.pagination.pageSize,
@@ -91,9 +101,11 @@ const UserTableComponent: ForwardRefRenderFunction<refType> = (_, ref) => {
     const upData = () => {
         const params: QueryParams = {
             limit: tableParams.pagination.pageSize,
-            offset: 0,
+            offset: (tableParams.pagination.current - 1) * tableParams.pagination.pageSize,
         };
+        setLoading(true);
         fetchUsers(params);
+        setLoading(false);
     };
     // 暴露 upData 方法给父组件
     useImperativeHandle(ref, () => ({
@@ -126,16 +138,24 @@ const UserTableComponent: ForwardRefRenderFunction<refType> = (_, ref) => {
                 key: "action",
                 fixed: "right",
                 width: "16%",
-                render: () => (
+                render: (record: UserItem) => (
                     [
                         <Button
                             type="link"
+                            onClick={() => {
+                                setEditItem([record]);
+                                setEditModalShow(true);
+                            }}
                         >
                             编辑
                         </Button>,
                         <Button
                             type="link"
                             danger
+                            onClick={() => {
+                                setEditItem([record]);
+                                setDeleteModalShow(true);
+                            }}
                         >
                             删除
                         </Button>,
@@ -161,7 +181,7 @@ const UserTableComponent: ForwardRefRenderFunction<refType> = (_, ref) => {
         <>
             <Table<UserItem>
                 className="users-table"
-                scroll={{ x: "max-content", y: 400 }}
+                scroll={{ x: "max-content", y: "calc(100vh - 300px)" }}
                 rowKey={(record) => record.id}
                 columns={columns}
                 dataSource={users}
@@ -170,6 +190,18 @@ const UserTableComponent: ForwardRefRenderFunction<refType> = (_, ref) => {
                 }}
                 loading={loading}
                 onChange={handleTableChange}
+            />
+            <DeleteModal
+                isModelShow={deleteModalShow}
+                onCancel={() => setDeleteModalShow(false)}
+                deleteItem={editItem}
+                upData={upData}
+            />
+            <EditModal
+                isModelShow={editModalShow}
+                onCancel={() => setEditModalShow(false)}
+                editItem={editItem[0]}
+                upData={upData}
             />
         </>
     );

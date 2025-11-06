@@ -22,7 +22,7 @@ const RegisterPage = () => {
           <h1 className="auth-title">创建账户</h1>
           <p className="auth-subtitle">填写信息开始使用</p>
         </div>
-        
+
         <Form
           name="register"
           onFinish={onFinish}
@@ -32,24 +32,24 @@ const RegisterPage = () => {
             name="username"
             rules={[{ required: true, message: '请输入用户名!' }]}
           >
-            <Input 
-              placeholder="用户名" 
+            <Input
+              placeholder="用户名"
               className="auth-input"
               size="large"
             />
           </Form.Item>
-          
+
           <Form.Item
             name="pwd"
             rules={[{ required: true, message: '请输入密码!' }]}
           >
-            <Input.Password 
-              placeholder="密码" 
+            <Input.Password
+              placeholder="密码"
               className="auth-input"
               size="large"
             />
           </Form.Item>
-          
+
           <Form.Item
             name="confirm"
             dependencies={['pwd']}
@@ -65,17 +65,17 @@ const RegisterPage = () => {
               }),
             ]}
           >
-            <Input.Password 
-              placeholder="确认密码" 
+            <Input.Password
+              placeholder="确认密码"
               className="auth-input"
               size="large"
             />
           </Form.Item>
-          
+
           <Form.Item>
-            <Button 
-              type="primary" 
-              htmlType="submit" 
+            <Button
+              type="primary"
+              htmlType="submit"
               className="auth-button register-button"
               size="large"
             >
@@ -83,11 +83,11 @@ const RegisterPage = () => {
             </Button>
           </Form.Item>
         </Form>
-        
+
         <div className="auth-footer">
           <span>已有账户？</span>
-          <Button 
-            type="link" 
+          <Button
+            type="link"
             className="auth-link"
             onClick={() => navigate({ to: '/login' })}
           >
