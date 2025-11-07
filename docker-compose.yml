@@ -47,6 +47,22 @@ services:
         condition: service_healthy
     networks:
       - my_postgres_net
+  
+  # 前端服务
+  frontend:
+    build:
+      context: ./react-frontend-test
+      dockerfile: Dockerfile
+    container_name: my_frontend
+    ports:
+      - "10012:80"
+    environment:
+      - NODE_ENV=production
+    networks:
+      - my_postgres_net
+    depends_on:
+      backend:
+        condition: service_started
 
 # 声明持久化数据卷
 volumes:

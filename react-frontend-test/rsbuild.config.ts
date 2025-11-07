@@ -34,10 +34,10 @@ export default defineConfig({
   },
   output: {
     // 与构建产物有关的选项
-    assetPrefix: "/strange",
-    // distPath: {
-    //   // favicon: './static/favicon',
-    // },
+    assetPrefix: "/strange/",
+    distPath: {
+      root: 'dist/strange',
+    },
   },
   resolve: {
     // 与源代码解析、编译方式相关的选项
@@ -53,7 +53,7 @@ export default defineConfig({
   source: {
     define: {
       "process.env.NODE_ENV": JSON.stringify("development"),
-      "process.env.PUBLIC_URL": JSON.stringify("."),
+      "process.env.PUBLIC_URL": JSON.stringify("/strange"),
     },
   },
   server: {
